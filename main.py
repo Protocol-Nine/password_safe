@@ -18,8 +18,15 @@ def add():
         salt = generate_salt()
         salted_password = salt + password.encode('utf-8')
         hashed_password = hashlib.sha256(salted_password).hexdigest()
-        with open("passwords.txt", 'a') as f:
-            f.write(f"{username} {salt.hex()} {hashed_password}\n")
+        
+        new_user = User(username, hashed_password)
+        
+        try:
+            users = User.read_users_from_json("users.json")
+        except FileNotFoundError:
+            users = []
+        users.append(new_user)
+        User.write_users_to_json(users, "users.json")
         messagebox.showinfo("Success", "Password added.")
     else:
         messagebox.showerror("Error", "Please enter both fields")
