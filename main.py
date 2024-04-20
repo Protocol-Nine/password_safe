@@ -100,15 +100,15 @@ if __name__ == "__main__":
     buttonAdd.grid(row=2, column=0, padx=15, pady=8, sticky="we")
     
     # Check button
-    buttonGet = tkinter.Button(app, text="Check", command=check)
+    buttonGet = tkinter.Button(app, text="Validate Pair", command=check)
     buttonGet.grid(row=2, column=1, padx=15, pady=8, sticky="we")
     
     # Delete button
-    buttonDelete = tkinter.Button(app, text="Delete", command=delete)
+    buttonDelete = tkinter.Button(app, text="Delete User Entry", command=delete)
     buttonDelete.grid(row=3, column=1, padx=15, pady=8, sticky="we")
     
     #Clear button
     buttonClear = tkinter.Button(app, text="Clear", command=clear)
-    buttonClear.grid(row=4, column=0, padx=15, pady=8, sticky="we")
+    buttonClear.grid(row=3, column=0, padx=15, pady=8, sticky="we")
     
     app.mainloop()
