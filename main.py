@@ -9,11 +9,12 @@ def generate_salt():
     # Generates a 16 byte salt
     return os.urandom(16)
 
-#def get_users():
-#    try:
-#        return User.read_users_from_json("users.json")
-#    except FileNotFoundError:
-#        return = []
+def get_users():
+    try:
+        users = User.read_users_from_json("users.json")
+    except FileNotFoundError:
+        users = []
+    return users
 
 def add():
     #accepting input from the user
@@ -27,10 +28,8 @@ def add():
         
         new_user = User(username, hashed_password)
         
-        try:
-            users = User.read_users_from_json("users.json")
-        except FileNotFoundError:
-            users = []
+        users = get_users()
+            
         users.append(new_user)
         User.write_users_to_json(users, "users.json")
         messagebox.showinfo("Success", "Password added.")
@@ -44,10 +43,7 @@ def check():
     
     passwords = {}
     
-    try:
-        users = User.read_users_from_json("users.json")
-    except FileNotFoundError:
-        users = []
+    users = get_users()
         
     user_found = False
     for user in users:
