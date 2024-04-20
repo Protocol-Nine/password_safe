@@ -9,6 +9,12 @@ def generate_salt():
     # Generates a 16 byte salt
     return os.urandom(16)
 
+#def get_users():
+#    try:
+#        return User.read_users_from_json("users.json")
+#    except FileNotFoundError:
+#        return = []
+
 def add():
     #accepting input from the user
     username = entryName.get()
@@ -17,7 +23,7 @@ def add():
     if username and password:
         salt = generate_salt()
         salted_password = salt + password.encode('utf-8')
-        hashed_password = hashlib.sha256(salted_password).hexdigest()
+        hashed_password = salt.hex() + hashlib.sha256(salted_password).hexdigest()
         
         new_user = User(username, hashed_password)
         
@@ -34,30 +40,27 @@ def add():
 def check():
     # Check if the password for a specified user is correct.
     username = entryName.get()
+    password = entryPassword.get()
     
     passwords = {}
-    try:
-        with open("passwords.txt", 'r') as file:
-            for line in file:
-                lineValues = line.split(' ')
-                passwords[lineValues[0]] = (bytes.fromhex(lineValues[1]), lineValues[2].strip())
-    except:
-        print("ERROR")
     
-    if passwords:
-        message = "Incorrect Password."
-        for name, (salt, hashed_password) in passwords.items():
-            if name == username:
-                salted_password = salt + entryPassword.get().encode('utf-8')
-                input_hashed_password = hashlib.sha256(salted_password).hexdigest()
-                if input_hashed_password == hashed_password:
-                    message = f"Correct Password."
-                break
-        else:
-            message = "No Such Username Exists."
-        messagebox.showinfo("Passwords", message)
-    else:
-        messagebox.showinfo("Passwords", "EMPTY LIST!!")
+    try:
+        users = User.read_users_from_json("users.json")
+    except FileNotFoundError:
+        users = []
+        
+    user_found = False
+    for user in users:
+        if user.username == username:
+            salt = bytes.fromhex(user.password[:32])
+            salted_password = salt + password.encode('utf-8')
+            hashed_password = hashlib.sha256(salted_password).hexdigest()
+            if hashed_password == user.password[32:]:
+                user_found = True
+                messagebox.showinfo("Passwords", "Correct Password.")
+            break
+    if not user_found:
+        messagebox.showinfo("Passwords", "Username or Password is Incorrect.")
         
 def delete():
     # Removes a user password pair from the password file for the current user input
