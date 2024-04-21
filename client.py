@@ -32,7 +32,7 @@ def list_pairs():
 # GUI setup
 app = tk.Tk()
 app.geometry("300x200")
-app.title("Password Manager Client")
+app.title("Password Safe")
 
 labelName = tk.Label(app, text="Username:")
 labelName.pack()
