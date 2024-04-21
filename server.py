@@ -9,7 +9,7 @@ def handle_request(request):
     if command == "LOG_IN":
         return handle_login(parts[1], parts[2])
     elif command == "LIST_PAIRS":
-        return handle_list_pairs()
+        return handle_list_pairs(parts[1])
     else:
         return "ERROR: Invalid command"
 

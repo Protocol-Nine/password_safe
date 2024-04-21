@@ -25,7 +25,8 @@ def log_in():
 
 def list_pairs():
     # Retrieve password pairs from the server and display them in a messagebox
-    request = "LIST_PAIRS"
+    username = entryName.get()
+    request = f"LIST_PAIRS {username}"
     response = send_request(request)
     messagebox.showinfo("Password Pairs", response)
 
