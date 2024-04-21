@@ -9,13 +9,6 @@ def generate_salt():
     # Generates a 16 byte salt
     return os.urandom(16)
 
-def get_users():
-    try:
-        users = User.read_users_from_json("users.json")
-    except FileNotFoundError:
-        users = []
-    return users
-
 def add():
     #accepting input from the user
     username = entryName.get()
@@ -28,7 +21,7 @@ def add():
         
         new_user = User(username, hashed_password)
         
-        users = get_users()
+        users = User.read_users_from_json("users.json")
             
         users.append(new_user)
         User.write_users_to_json(users, "users.json")
@@ -43,7 +36,7 @@ def check():
     
     passwords = {}
     
-    users = get_users()
+    users = User.read_users_from_json("users.json")
         
     user_found = False
     for user in users:
@@ -61,26 +54,20 @@ def check():
 def delete():
     # Removes a user password pair from the password file for the current user input
     username = entryName.get()
-    temp_passwords = []
-    try:
-        with open("passwords.txt", 'r') as file:
-            for line in file:
-                lineValues = line.split(' ')
-                if lineValues[0] != username:
-                    temp_passwords.append(line)
-        #writing the modified data back to the file
-        with open("passwords.txt", 'w') as file:
-            for line in temp_passwords:
-                f.write(line)
-        messagebox.showinfo(
-            "Success", f"User {username} deleted successfully.")
-    except Exception as e:
-        messagebox.showerror("Error", f"Error deleting user {username}: {e}")
+    
+    users = User.read_users_from_json("users.json")
+    
+    users = [user for user in users if user.username != username]
+    
+    User.write_users_to_json(users, "users.json")
+    
+    messagebox.showinfo("Success", f"User {username} deleted permanently")
         
         
 def clear():
     # Clear the contents of the passwords file
-    open("passwords.txt", 'w').close()
+    with open("users.json", "w") as file:
+        file.write("{}")
     messagebox.showinfo("Success", "Cleared password list.")
         
         

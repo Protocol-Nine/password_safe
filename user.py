@@ -22,9 +22,14 @@ class User:
     
     @staticmethod
     def read_users_from_json(filename):
-        with open(filename, 'r') as file:
-            data = json.load(file)
-        return [User.from_dict(user_data) for user_data in data["users"]]
+        try:
+            with open(filename, 'r') as file:
+                data = json.load(file)
+                users_data = data.get("users", [])
+        except (FileNotFoundError, json.JSONDecodeError):
+            users_data = []
+            
+        return [User.from_dict(user_data) for user_data in users_data]
     
     @staticmethod
     def write_users_to_json(users, filename):
