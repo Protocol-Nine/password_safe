@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, simpledialog
 import socket
 import json
 
@@ -21,6 +21,7 @@ def log_in():
         messagebox.showinfo("Success", "Logged in successfully.")
         # Enable buttons to interact with the server's database
         buttonListPairs.config(state=tk.NORMAL)
+        buttonAddPair.config(state=tk.NORMAL)  # Enable the Add Password Pair button
     else:
         messagebox.showerror("Error", "Login failed. Please try again.")
 
@@ -39,6 +40,21 @@ def list_pairs():
             messagebox.showinfo("Password Pairs", "No password pairs found.")
     except json.JSONDecodeError:
         messagebox.showerror("Error", "Error decoding server response.")
+
+def add_pair():
+    # Get website and password from the user
+    website = simpledialog.askstring("Input", "Enter website:")
+    password = simpledialog.askstring("Input", "Enter password:")
+    if website and password:
+        username = entryName.get()
+        request = f"ADD_PAIR {username} {website} {password}"
+        response = send_request(request)
+        if response == "SUCCESS":
+            messagebox.showinfo("Success", "Password pair added successfully.")
+        else:
+            messagebox.showerror("Error", "Failed to add password pair.")
+    else:
+        messagebox.showerror("Error", "Please enter both website and password.")
 
 # GUI setup
 app = tk.Tk()
@@ -60,5 +76,8 @@ buttonLogIn.pack()
 
 buttonListPairs = tk.Button(app, text="List Password Pairs", command=list_pairs, state=tk.DISABLED)
 buttonListPairs.pack()
+
+buttonAddPair = tk.Button(app, text="Add Password Pair", command=add_pair, state=tk.DISABLED)
+buttonAddPair.pack()
 
 app.mainloop()

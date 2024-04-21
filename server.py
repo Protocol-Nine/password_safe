@@ -10,6 +10,8 @@ def handle_request(request):
         return handle_login(parts[1], parts[2])
     elif command == "LIST_PAIRS":
         return handle_list_pairs(parts[1])
+    elif command == "ADD_PAIR":
+        return handle_add_pair(parts[1], parts[2], parts[3])
     else:
         return "ERROR: Invalid command"
 
@@ -37,6 +39,14 @@ def handle_list_pairs(username):
                 return "No password pairs found."
     return "User not found."
 
+def handle_add_pair(username, website, password):
+    users = User.read_users_from_json("users.json")
+    for user in users:
+        if user.username == username:
+            user.add_pair(website, password)
+            User.write_users_to_json(users, "users.json")
+            return "SUCCESS"
+    return "FAILURE: User not found"
 
 
 def start_server():
