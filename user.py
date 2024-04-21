@@ -9,6 +9,9 @@ class User:
     def add_pair(self, website, password):
         self.pairs.append({"website": website, "password": password})
         
+    def list_pairs(self):
+        return self.pairs
+        
     def to_dict(self):
         return{
             "username": self.username,

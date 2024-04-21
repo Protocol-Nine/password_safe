@@ -25,11 +25,11 @@ def add():
             
         users.append(new_user)
         User.write_users_to_json(users, "users.json")
-        messagebox.showinfo("Success", "Password added.")
+        messagebox.showinfo("Success", "User added.")
     else:
         messagebox.showerror("Error", "Please enter both fields")
         
-def check():
+def log_in():
     # Check if the password for a specified user is correct.
     username = entryName.get()
     password = entryPassword.get()
@@ -47,9 +47,51 @@ def check():
             if hashed_password == user.password[32:]:
                 user_found = True
                 messagebox.showinfo("Passwords", "Correct Password.")
+                buttonAddPair.config(state=tkinter.NORMAL)
+                buttonListPairs.config(state=tkinter.NORMAL)
+                labelWebsite.config(state=tkinter.NORMAL)
+                entryWebsite.config(state=tkinter.NORMAL)
+                labelPairPassword.config(state=tkinter.NORMAL)
+                entryPairPassword.config(state=tkinter.NORMAL)
             break
     if not user_found:
         messagebox.showinfo("Passwords", "Username or Password is Incorrect.")
+        buttonAddPair.config(state=tkinter.DISABLED)
+        buttonListPairs.config(state=tkinter.DISABLED)
+        labelWebsite.config(state=tkinter.DISABLED)
+        entryWebsite.config(state=tkinter.DISABLED)
+        labelPairPassword.config(state=tkinter.DISABLED)
+        entryPairPassword.config(state=tkinter.DISABLED)
+
+def add_pair():
+    #Add a password pair for the current user
+    username = entryName.get()
+    website = entryWebsite.get()
+    password = entryPairPassword.get()
+    
+    users = User.read_users_from_json("users.json")
+    
+    for user in users:
+        if user.username == username:
+            user.add_pair(website, password)
+            User.write_users_to_json(users, "users.json")
+            messagebox.showinfo("success", "Password pair added.")
+            break
+        
+def list_pairs():
+    # List all password pairs for the current user
+    username = entryName.get()
+    
+    users = User.read_users_from_json("users.json")
+    
+    for user in users:
+        if user.username == username:
+            pairs = user.list_pairs()
+            if pairs:
+                messagebox.showinfo("Password Pairs", "\n".join([f"Website: {pair['website']}, Password: {pair['password']}" for pair in pairs]))
+            else:
+                messagebox.showinfo("Password Pairs", "No password pairs found.")
+            break
         
 def delete():
     # Removes a user password pair from the password file for the current user input
@@ -73,7 +115,7 @@ def clear():
         
 if __name__ == "__main__":
     app = tkinter.Tk()
-    app.geometry("560x270")
+    app.geometry("560x450")
     app.title("ELE 408 Password Manager")
     
     # Username block
@@ -89,19 +131,41 @@ if __name__ == "__main__":
     entryPassword.grid(row=1, column=1, padx=10, pady=5)
     
     # Add button
-    buttonAdd = tkinter.Button(app, text="Add", command=add)
+    buttonAdd = tkinter.Button(app, text="Add User", command=add)
     buttonAdd.grid(row=2, column=0, padx=15, pady=8, sticky="we")
     
-    # Check button
-    buttonGet = tkinter.Button(app, text="Validate Pair", command=check)
-    buttonGet.grid(row=2, column=1, padx=15, pady=8, sticky="we")
+    # LogIn button
+    buttonLogIn = tkinter.Button(app, text="Log In", command=log_in)
+    buttonLogIn.grid(row=2, column=1, padx=15, pady=8, sticky="we")    
     
     # Delete button
     buttonDelete = tkinter.Button(app, text="Delete User Entry", command=delete)
     buttonDelete.grid(row=3, column=1, padx=15, pady=8, sticky="we")
     
     #Clear button
-    buttonClear = tkinter.Button(app, text="Clear", command=clear)
+    buttonClear = tkinter.Button(app, text="Clear Userbase", command=clear)
     buttonClear.grid(row=3, column=0, padx=15, pady=8, sticky="we")
+    
+    # Add password pair button
+    buttonAddPair = tkinter.Button(app, text="Add Password Pair", command=add_pair, state=tkinter.DISABLED)
+    buttonAddPair.grid(row=4, column=0, padx=15, pady=8, sticky="we")
+    
+    # List password pairs button
+    buttonListPairs = tkinter.Button(app, text="List Password Pairs", command=list_pairs, state=tkinter.DISABLED)
+    buttonListPairs.grid(row=4, column=1, padx=15, pady=8, sticky="we")
+    
+    # Website block
+    labelWebsite = tkinter.Label(app, text="WEBSITE:", state=tkinter.DISABLED)
+    labelWebsite.grid(row=5, column=0, padx=15, pady=15)
+    entryWebsite = tkinter.Entry(app, state=tkinter.DISABLED)
+    entryWebsite.grid(row=5, column=1, padx=15, pady=15)
+    
+    # Password Pair
+    labelPairPassword = tkinter.Label(app, text="PAIR PASSWORD", state=tkinter.DISABLED)
+    labelPairPassword.grid(row=6, column=0, padx=15, pady=15)
+    entryPairPassword = tkinter.Entry(app, show="*", state=tkinter.DISABLED)
+    entryPairPassword.grid(row=6, column=1, padx=15, pady=15)
+    
+    
     
     app.mainloop()
