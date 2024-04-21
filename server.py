@@ -31,8 +31,12 @@ def handle_list_pairs(username):
     for user in users:
         if user.username == username:
             pairs = user.list_pairs()
-            return pairs
-    return None  # Return None if the user is not found
+            if pairs:
+                return json.dumps(pairs)  # Serialize pairs to JSON string
+            else:
+                return "No password pairs found."
+    return "User not found."
+
 
 
 def start_server():
