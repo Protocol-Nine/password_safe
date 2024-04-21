@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 import socket
+import json
 
 def send_request(request):
     server_address = ('192.168.0.233', 8888)  # IP address of Raspberry Pi
@@ -24,11 +25,20 @@ def log_in():
         messagebox.showerror("Error", "Login failed. Please try again.")
 
 def list_pairs():
-    # Retrieve password pairs from the server and display them in a messagebox
+    # Retrieve password pairs from the server
     username = entryName.get()
     request = f"LIST_PAIRS {username}"
     response = send_request(request)
-    messagebox.showinfo("Password Pairs", response)
+    
+    try:
+        pairs = json.loads(response)
+        if pairs:
+            pair_info = "\n".join([f"Website: {pair['website']}, Password: {pair['password']}" for pair in pairs])
+            messagebox.showinfo("Password Pairs", pair_info)
+        else:
+            messagebox.showinfo("Password Pairs", "No password pairs found.")
+    except json.JSONDecodeError:
+        messagebox.showerror("Error", "Error decoding server response.")
 
 # GUI setup
 app = tk.Tk()
