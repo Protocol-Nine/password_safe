@@ -26,6 +26,24 @@ def add():
         users.append(new_user)
         User.write_users_to_json(users, "users.json")
         messagebox.showinfo("Success", "User added.")
+        
+        buttonAddPair.config(state=tkinter.NORMAL)
+        buttonListPairs.config(state=tkinter.NORMAL)
+        labelWebsite.config(state=tkinter.NORMAL)
+        entryWebsite.config(state=tkinter.NORMAL)
+        labelPairPassword.config(state=tkinter.NORMAL)
+        entryPairPassword.config(state=tkinter.NORMAL)
+                
+        labelName.config(state=tkinter.DISABLED)
+        entryName.config(state=tkinter.DISABLED)
+        labelPassword.config(state=tkinter.DISABLED)
+        entryPassword.config(state=tkinter.DISABLED)
+        buttonAdd.config(state=tkinter.DISABLED)
+        buttonClear.config(state=tkinter.DISABLED)
+        buttonDelete.config(state=tkinter.DISABLED)
+                
+        buttonLogIn.config(text="Log Out")
+        buttonLogIn.config(command=log_out)
     else:
         messagebox.showerror("Error", "Please enter both fields")
         
@@ -46,7 +64,6 @@ def log_in():
             hashed_password = hashlib.sha256(salted_password).hexdigest()
             if hashed_password == user.password[32:]:
                 user_found = True
-                messagebox.showinfo("Passwords", "Correct Password.")
                 
                 buttonAddPair.config(state=tkinter.NORMAL)
                 buttonListPairs.config(state=tkinter.NORMAL)
