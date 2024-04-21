@@ -26,10 +26,14 @@ def handle_login(username, password):
                 return "FAILURE: Invalid username or password"
     return "FAILURE: Invalid username or password"
 
-def handle_list_pairs():
-    # Implement logic to retrieve password pairs from the database
-    # Return the password pairs as a JSON-formatted string
-    return "Not implemented yet"
+def handle_list_pairs(username):
+    users = User.read_users_from_json("users.json")
+    for user in users:
+        if user.username == username:
+            pairs = user.list_pairs()
+            return pairs
+    return None  # Return None if the user is not found
+
 
 def start_server():
     server_address = ('', 8888)  # Listen on all available interfaces, port 8888
