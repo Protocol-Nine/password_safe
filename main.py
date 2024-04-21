@@ -47,21 +47,47 @@ def log_in():
             if hashed_password == user.password[32:]:
                 user_found = True
                 messagebox.showinfo("Passwords", "Correct Password.")
+                
                 buttonAddPair.config(state=tkinter.NORMAL)
                 buttonListPairs.config(state=tkinter.NORMAL)
                 labelWebsite.config(state=tkinter.NORMAL)
                 entryWebsite.config(state=tkinter.NORMAL)
                 labelPairPassword.config(state=tkinter.NORMAL)
                 entryPairPassword.config(state=tkinter.NORMAL)
+                
+                labelName.config(state=tkinter.DISABLED)
+                entryName.config(state=tkinter.DISABLED)
+                labelPassword.config(state=tkinter.DISABLED)
+                entryPassword.config(state=tkinter.DISABLED)
+                buttonAdd.config(state=tkinter.DISABLED)
+                buttonClear.config(state=tkinter.DISABLED)
+                buttonDelete.config(state=tkinter.DISABLED)
+                
+                buttonLogIn.config(text="Log Out")
+                buttonLogIn.config(command=log_out)
             break
     if not user_found:
         messagebox.showinfo("Passwords", "Username or Password is Incorrect.")
-        buttonAddPair.config(state=tkinter.DISABLED)
-        buttonListPairs.config(state=tkinter.DISABLED)
-        labelWebsite.config(state=tkinter.DISABLED)
-        entryWebsite.config(state=tkinter.DISABLED)
-        labelPairPassword.config(state=tkinter.DISABLED)
-        entryPairPassword.config(state=tkinter.DISABLED)
+        
+
+def log_out():
+    buttonAddPair.config(state=tkinter.DISABLED)
+    buttonListPairs.config(state=tkinter.DISABLED)
+    labelWebsite.config(state=tkinter.DISABLED)
+    entryWebsite.config(state=tkinter.DISABLED)
+    labelPairPassword.config(state=tkinter.DISABLED)
+    entryPairPassword.config(state=tkinter.DISABLED)
+        
+    labelName.config(state=tkinter.NORMAL)
+    entryName.config(state=tkinter.NORMAL)
+    labelPassword.config(state=tkinter.NORMAL)
+    entryPassword.config(state=tkinter.NORMAL)
+    buttonAdd.config(state=tkinter.NORMAL)
+    buttonClear.config(state=tkinter.NORMAL)
+    buttonDelete.config(state=tkinter.NORMAL)
+    
+    buttonLogIn.config(text="Log In")
+    buttonLogIn.config(command=log_in)
 
 def add_pair():
     #Add a password pair for the current user
@@ -116,7 +142,7 @@ def clear():
 if __name__ == "__main__":
     app = tkinter.Tk()
     app.geometry("560x450")
-    app.title("ELE 408 Password Manager")
+    app.title("ELE 408 Password Safe")
     
     # Username block
     labelName = tkinter.Label(app, text="USERNAME:")
@@ -127,7 +153,7 @@ if __name__ == "__main__":
     # Password block
     labelPassword = tkinter.Label(app, text="PASSWORD:")
     labelPassword.grid(row=1, column=0, padx=10, pady=5)
-    entryPassword = tkinter.Entry(app)
+    entryPassword = tkinter.Entry(app, show="*")
     entryPassword.grid(row=1, column=1, padx=10, pady=5)
     
     # Add button
