@@ -18,12 +18,22 @@ def log_in():
     request = f"LOG_IN {username} {password}"
     response = send_request(request)
     if response == "SUCCESS":
-        messagebox.showinfo("Success", "Logged in successfully.")
-        # Enable buttons to interact with the server's database
         buttonListPairs.config(state=tk.NORMAL)
-        buttonAddPair.config(state=tk.NORMAL)  # Enable the Add Password Pair button
+        buttonAddPair.config(state=tk.NORMAL)
+        entryName.config(state=tk.DISABLED)
+        entryPassword.config(state=tk.DISABLED)
+        buttonLogIn.config(text="Log Out")
+        buttonLogIn.config(command=log_out)
     else:
         messagebox.showerror("Error", "Login failed. Please try again.")
+
+def log_out():
+    buttonListPairs.config(state=tk.DISABLED)
+    buttonAddPair.config(state=tk.DISABLED)
+    entryName.config(state=tk.NORMAL)
+    entryPassword.config(state=tk.NORMAL)
+    buttonLogIn.config(text="Log In")
+    buttonLogIn.config(command=log_in)
 
 def list_pairs():
     # Retrieve password pairs from the server
